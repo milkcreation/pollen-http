@@ -19,8 +19,6 @@ class UrlFactory implements UrlFactoryInterface
     protected $uri;
 
     /**
-     * CONSTRUCTEUR
-     *
      * @param UriInterface|LeagueUri|string $uri
      *
      * @return void
