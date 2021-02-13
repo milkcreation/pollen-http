@@ -25,8 +25,12 @@ class Request extends BaseRequest implements RequestInterface
     public static function createFromBase(BaseRequest $request): RequestInterface
     {
         $newRequest = (new static())->duplicate(
-            $request->query->all(), $request->request->all(), $request->attributes->all(),
-            $request->cookies->all(), $request->files->all(), $request->server->all()
+            $request->query->all(),
+            $request->request->all(),
+            $request->attributes->all(),
+            $request->cookies->all(),
+            $request->files->all(),
+            $request->server->all()
         );
 
         $newRequest->headers->replace($request->headers->all());
@@ -49,14 +53,15 @@ class Request extends BaseRequest implements RequestInterface
      */
     public static function createPsr(?BaseRequest $request = null): ?PsrRequest
     {
-        if ($request = $request ?: self::getFromGlobals()) {
-            $psr17Factory = new Psr17Factory();
-            $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
-
-            return $psrHttpFactory->createRequest($request);
+        if ($request === null) {
+            $request = self::getFromGlobals();
         }
-        return null;
-    }
+
+        $psr17Factory = new Psr17Factory();
+        $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+
+        return $psrHttpFactory->createRequest($request);
+     }
 
     /**
      * @inheritDoc
@@ -76,12 +81,11 @@ class Request extends BaseRequest implements RequestInterface
     {
         if ($appUrl = Env::get('APP_URL')) {
             if (preg_match('/^' . preg_quote($this->getSchemeAndHttpHost(), '/') . '(.*)/', $appUrl, $matches)) {
-                return isset($matches[1]) ? '/'. rtrim(ltrim($matches[1], '/'), '/') : '';
+                return isset($matches[1]) ? '/' . rtrim(ltrim($matches[1], '/'), '/') : '';
             }
             return '';
-        } else {
-            return $this->server->get('CONTEXT_PREFIX', '');
         }
+        return $this->server->get('CONTEXT_PREFIX', '');
     }
 
     /**

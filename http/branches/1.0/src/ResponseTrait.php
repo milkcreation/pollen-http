@@ -42,25 +42,26 @@ trait ResponseTrait
      *
      * @param BaseResponse|ResponseInterface|null $response
      *
-     * @return static|null
+     * @return PsrResponse
      */
-    public static function createPsr($response = null): ?PsrResponse
+    public static function createPsr($response = null): PsrResponse
     {
-        if ($response = $response ?: new static()) {
-            $psr17Factory = new Psr17Factory();
-            $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
-
-            return $psrHttpFactory->createResponse($response);
+        if ($response === null) {
+            $response = new static();
         }
-        return null;
+
+        $psr17Factory = new Psr17Factory();
+        $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+
+        return $psrHttpFactory->createResponse($response);
     }
 
     /**
      * Conversion au format PSR-7.
      *
-     * @return static|null
+     * @return PsrResponse
      */
-    public function psr(): ?PsrResponse
+    public function psr(): PsrResponse
     {
         return self::createPsr($this);
     }
