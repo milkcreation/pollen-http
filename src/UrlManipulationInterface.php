@@ -7,7 +7,7 @@ namespace Pollen\Http;
 use Psr\Http\Message\UriInterface;
 use League\Uri\Contracts\UriInterface as LeagueUri;
 
-interface UrlFactoryInterface
+interface UrlManipulationInterface
 {
     /**
      * Résolution de sortie sous forme de chaîne de caractère.
@@ -23,7 +23,7 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function appendSegment(string $segment): UrlFactoryInterface;
+    public function appendSegment(string $segment): UrlManipulationInterface;
 
     /**
      * Suppression d'une portion de chemin de l'url.
@@ -32,14 +32,14 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function deleteSegment(string $segment): UrlFactoryInterface;
+    public function deleteSegment(string $segment): UrlManipulationInterface;
 
     /**
      * Récupération de la chaîne encodée de l'url.
      *
-     * @return LeagueUri|UriInterface|null
+     * @return UriInterface
      */
-    public function get();
+    public function get(): UriInterface;
 
     /**
      * Retourne la chaîne décodée de l'url.
@@ -74,7 +74,7 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function set($uri): UrlFactoryInterface;
+    public function set($uri): UrlManipulationInterface;
 
     /**
      * Ajout d'arguments à l'url.
@@ -83,7 +83,7 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function with(array $args): UrlFactoryInterface;
+    public function with(array $args): UrlManipulationInterface;
 
     /**
      * Ajout|Remplacement|Suppression du fragment (ancre).
@@ -92,7 +92,7 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function withFragment(string $fragment): UrlFactoryInterface;
+    public function withFragment(string $fragment): UrlManipulationInterface;
 
     /**
      * Suppression d'arguments de l'url.
@@ -101,7 +101,7 @@ interface UrlFactoryInterface
      *
      * @return static
      */
-    public function without(array $args): UrlFactoryInterface;
+    public function without(array $args): UrlManipulationInterface;
 
     /**
      * Récupération du rendu de l'url

@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
-use League\Uri\Contracts\UriInterface as LeagueUri;
+use InvalidArgumentException;
+use League\Uri\Contracts\UriInterface as LeagueUriInterface;
 use League\Uri\Http;
 use League\Uri\Components\Query;
 use League\Uri\UriModifier;
 use Psr\Http\Message\UriInterface;
 
-class UrlFactory implements UrlFactoryInterface
+class UriManipulation implements UrlManipulationInterface
 {
     /**
      * Instance de l'url.
-     * @var LeagueUri|UriInterface|null
+     * @var UriInterface
      */
     protected $uri;
 
     /**
-     * @param UriInterface|LeagueUri|string $uri
+     * @param UriInterface|LeagueUriInterface|string $uri
      *
      * @return void
      */
@@ -39,20 +40,18 @@ class UrlFactory implements UrlFactoryInterface
     /**
      * @inheritDoc
      */
-    public function appendSegment(string $segment): UrlFactoryInterface
+    public function appendSegment(string $segment): UrlManipulationInterface
     {
-        $this->uri = UriModifier::appendSegment($this->uri, $segment);
-
-        return $this;
+        return $this->set(UriModifier::appendSegment($this->uri, $segment));
     }
 
     /**
      * @inheritDoc
      */
-    public function deleteSegment(string $segment): UrlFactoryInterface
+    public function deleteSegment(string $segment): UrlManipulationInterface
     {
         if (preg_match("#{$segment}#", $this->uri->getPath(), $matches)) {
-            $this->uri = $this->uri->withPath(preg_replace("#{$matches[0]}#", '', $this->uri->getPath()));
+            return $this->set($this->uri->withPath(preg_replace("#{$matches[0]}#", '', $this->uri->getPath())));
         }
         return $this;
     }
@@ -60,7 +59,7 @@ class UrlFactory implements UrlFactoryInterface
     /**
      * @inheritDoc
      */
-    public function get()
+    public function get(): UriInterface
     {
         return $this->uri;
     }
@@ -94,47 +93,42 @@ class UrlFactory implements UrlFactoryInterface
     /**
      * @inheritDoc
      */
-    public function set($uri): UrlFactoryInterface
+    public function set($uri): UrlManipulationInterface
     {
-        if (!$uri instanceof UriInterface || !$uri instanceof LeagueUri) {
-            $uri = Http::createFromString($uri);
+        if (is_string($uri) && !($uri instanceof UriInterface) && !($uri instanceof LeagueUriInterface)) {
+            throw new InvalidArgumentException(
+                'Uri argument must be a string or UriInterface instance or LeagueUriInterface instance'
+            );
         }
 
-        $this->uri = $uri;
-
+        $this->uri = is_string($uri) ? Http::createFromString($uri) : Http::createFromUri($uri);
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function with(array $args): UrlFactoryInterface
+    public function with(array $args): UrlManipulationInterface
     {
         $this->without(array_keys($args));
 
-        $this->uri = UriModifier::appendQuery($this->uri, Query::createFromParams($args));
-
-        return $this;
+        return $this->set(UriModifier::appendQuery($this->uri, Query::createFromParams($args)));
     }
 
     /**
      * @inheritDoc
      */
-    public function withFragment(string $fragment): UrlFactoryInterface
+    public function withFragment(string $fragment): UrlManipulationInterface
     {
-        $this->uri = $this->uri->withFragment($fragment);
-
-        return $this;
+        return $this->set($this->uri->withFragment($fragment));
     }
 
     /**
      * @inheritDoc
      */
-    public function without(array $args): UrlFactoryInterface
+    public function without(array $args): UrlManipulationInterface
     {
-        $this->uri = UriModifier::removeParams($this->uri, ...$args);
-
-        return $this;
+        return $this->set(UriModifier::removeParams($this->uri, ...$args));
     }
 
     /**
@@ -142,6 +136,6 @@ class UrlFactory implements UrlFactoryInterface
      */
     public function render(): string
     {
-        return ($uri = $this->get()) ? (string)$uri : '';
+        return (string)$this->uri;
     }
 }
