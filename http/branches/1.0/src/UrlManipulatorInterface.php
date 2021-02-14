@@ -7,7 +7,7 @@ namespace Pollen\Http;
 use Psr\Http\Message\UriInterface;
 use League\Uri\Contracts\UriInterface as LeagueUri;
 
-interface UrlManipulationInterface
+interface UrlManipulatorInterface
 {
     /**
      * Résolution de sortie sous forme de chaîne de caractère.
@@ -23,7 +23,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function appendSegment(string $segment): UrlManipulationInterface;
+    public function appendSegment(string $segment): UrlManipulatorInterface;
 
     /**
      * Suppression d'une portion de chemin de l'url.
@@ -32,7 +32,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function deleteSegment(string $segment): UrlManipulationInterface;
+    public function deleteSegment(string $segment): UrlManipulatorInterface;
 
     /**
      * Récupération de la chaîne encodée de l'url.
@@ -74,7 +74,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function set($uri): UrlManipulationInterface;
+    public function set($uri): UrlManipulatorInterface;
 
     /**
      * Ajout d'arguments à l'url.
@@ -83,7 +83,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function with(array $args): UrlManipulationInterface;
+    public function with(array $args): UrlManipulatorInterface;
 
     /**
      * Ajout|Remplacement|Suppression du fragment (ancre).
@@ -92,7 +92,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function withFragment(string $fragment): UrlManipulationInterface;
+    public function withFragment(string $fragment): UrlManipulatorInterface;
 
     /**
      * Suppression d'arguments de l'url.
@@ -101,7 +101,7 @@ interface UrlManipulationInterface
      *
      * @return static
      */
-    public function without(array $args): UrlManipulationInterface;
+    public function without(array $args): UrlManipulatorInterface;
 
     /**
      * Récupération du rendu de l'url
