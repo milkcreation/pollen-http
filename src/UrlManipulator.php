@@ -11,7 +11,7 @@ use League\Uri\Components\Query;
 use League\Uri\UriModifier;
 use Psr\Http\Message\UriInterface;
 
-class UrlManipulation implements UrlManipulationInterface
+class UrlManipulator implements UrlManipulatorInterface
 {
     /**
      * Instance de l'url.
@@ -40,7 +40,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function appendSegment(string $segment): UrlManipulationInterface
+    public function appendSegment(string $segment): UrlManipulatorInterface
     {
         return $this->set(UriModifier::appendSegment($this->uri, $segment));
     }
@@ -48,7 +48,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function deleteSegment(string $segment): UrlManipulationInterface
+    public function deleteSegment(string $segment): UrlManipulatorInterface
     {
         if (preg_match("#{$segment}#", $this->uri->getPath(), $matches)) {
             return $this->set($this->uri->withPath(preg_replace("#{$matches[0]}#", '', $this->uri->getPath())));
@@ -93,7 +93,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function set($uri): UrlManipulationInterface
+    public function set($uri): UrlManipulatorInterface
     {
         if (!is_string($uri) && !($uri instanceof UriInterface) && !($uri instanceof LeagueUriInterface)) {
             throw new InvalidArgumentException(
@@ -108,7 +108,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function with(array $args): UrlManipulationInterface
+    public function with(array $args): UrlManipulatorInterface
     {
         $this->without(array_keys($args));
 
@@ -118,7 +118,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function withFragment(string $fragment): UrlManipulationInterface
+    public function withFragment(string $fragment): UrlManipulatorInterface
     {
         return $this->set($this->uri->withFragment($fragment));
     }
@@ -126,7 +126,7 @@ class UrlManipulation implements UrlManipulationInterface
     /**
      * @inheritDoc
      */
-    public function without(array $args): UrlManipulationInterface
+    public function without(array $args): UrlManipulatorInterface
     {
         return $this->set(UriModifier::removeParams($this->uri, ...$args));
     }
