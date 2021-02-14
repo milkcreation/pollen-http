@@ -11,7 +11,7 @@ use League\Uri\Components\Query;
 use League\Uri\UriModifier;
 use Psr\Http\Message\UriInterface;
 
-class UriManipulation implements UrlManipulationInterface
+class UrlManipulation implements UrlManipulationInterface
 {
     /**
      * Instance de l'url.
@@ -95,7 +95,7 @@ class UriManipulation implements UrlManipulationInterface
      */
     public function set($uri): UrlManipulationInterface
     {
-        if (is_string($uri) && !($uri instanceof UriInterface) && !($uri instanceof LeagueUriInterface)) {
+        if (!is_string($uri) && !($uri instanceof UriInterface) && !($uri instanceof LeagueUriInterface)) {
             throw new InvalidArgumentException(
                 'Uri argument must be a string or UriInterface instance or LeagueUriInterface instance'
             );

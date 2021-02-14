@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
-use Symfony\Component\HttpFoundation\Response as BaseResponse;
-
 /**
- * @mixin BaseResponse
+ * @mixin \Symfony\Component\HttpFoundation\Response
  * @mixin ResponseTrait
  */
 interface ResponseInterface

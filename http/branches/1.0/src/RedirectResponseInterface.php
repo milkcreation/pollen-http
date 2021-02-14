@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
-use Symfony\Component\HttpFoundation\RedirectResponse as BaseRedirectResponse;
-
 /**
- * @mixin BaseRedirectResponse
+ * @mixin \Symfony\Component\HttpFoundation\RedirectResponse
+ * @mixin ResponseTrait
  */
 interface RedirectResponseInterface extends ResponseInterface
 {
