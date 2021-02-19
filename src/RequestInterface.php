@@ -47,6 +47,13 @@ interface RequestInterface
     public static function getFromGlobals(): RequestInterface;
 
     /**
+     * Récupération du chemin absolu vers la racine du site.
+     *
+     * @return string
+     */
+    public function getDocumentRoot(): ?string;
+
+    /**
      * Récupération du prefixe d'url
      *
      * @return static
