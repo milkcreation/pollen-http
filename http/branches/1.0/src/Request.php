@@ -77,6 +77,26 @@ class Request extends BaseRequest implements RequestInterface
     /**
      * @inheritDoc
      */
+    public function getDocumentRoot(): ?string
+    {
+        if ($file = $this->server->get('SCRIPT_FILENAME')) {
+            return dirname($file);
+        }
+
+        if ($root = $this->server->get('CONTEXT_DOCUMENT_ROOT')) {
+            return $root;
+        }
+
+        if (defined('ROOT_PATH')) {
+            return ROOT_PATH;
+        }
+
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getRewriteBase(): string
     {
         if ($appUrl = Env::get('APP_URL')) {

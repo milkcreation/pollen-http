@@ -36,7 +36,12 @@ class UrlHelper
     }
 
     /**
-     * @inheritDoc
+     * Délégation d'appel des méthodes de l'UrlHelper de Symfony.
+     *
+     * @param string $method
+     * @param array $arguments
+     *
+     * @return mixed
      */
     public function __call(string $method, array $arguments)
     {
@@ -54,7 +59,11 @@ class UrlHelper
     }
 
     /**
-     * @inheritDoc
+     * Récupération de l'url absolue vers un chemin.
+     *
+     * @param string $path
+     *
+     * @return string
      */
     public function getAbsoluteUrl(string $path = ''): string
     {
