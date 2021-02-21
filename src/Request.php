@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Http;
 
 use Pollen\Support\Env;
+use Pollen\Support\Filesystem;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ServerRequestInterface as PsrRequest;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
@@ -18,6 +19,12 @@ class Request extends BaseRequest implements RequestInterface
      * @var RequestInterface|null
      */
     protected static $globalsRequest;
+
+    /**
+     * Chemin absolue vers le répertoire racine de l'application.
+     * @var string
+     */
+    protected $documentRoot;
 
     /**
      * @inheritDoc
@@ -61,7 +68,7 @@ class Request extends BaseRequest implements RequestInterface
         $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
 
         return $psrHttpFactory->createRequest($request);
-     }
+    }
 
     /**
      * @inheritDoc
@@ -79,19 +86,19 @@ class Request extends BaseRequest implements RequestInterface
      */
     public function getDocumentRoot(): ?string
     {
-        if ($file = $this->server->get('SCRIPT_FILENAME')) {
-            return dirname($file);
+        if ($this->documentRoot === null) {
+            if ($file = $this->server->get('SCRIPT_FILENAME')) {
+                $this->documentRoot = dirname($file);
+            } elseif (!$this->documentRoot = $this->server->get('CONTEXT_DOCUMENT_ROOT')) {
+                $this->documentRoot = getcwd() ?: null;
+            }
+
+            if ($this->documentRoot !== null) {
+                $this->documentRoot = Filesystem::normalizePath($this->documentRoot);
+            }
         }
 
-        if ($root = $this->server->get('CONTEXT_DOCUMENT_ROOT')) {
-            return $root;
-        }
-
-        if (defined('ROOT_PATH')) {
-            return ROOT_PATH;
-        }
-
-        return null;
+        return $this->documentRoot;
     }
 
     /**
@@ -116,4 +123,13 @@ class Request extends BaseRequest implements RequestInterface
         return static::createPsr($this);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setDocumentRoot(string $documentRoot): RequestInterface
+    {
+        $this->documentRoot = $documentRoot;
+
+        return $this;
+    }
 }
