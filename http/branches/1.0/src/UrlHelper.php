@@ -50,7 +50,8 @@ class UrlHelper
         } catch (Throwable $e) {
             throw new BadMethodCallException(
                 sprintf(
-                    'Delegate UrlHelper method call [%s] throws an exception: %s',
+                    'Delegate [%s] method call [%s] throws an exception: %s',
+                    BaseUrlHelper::class,
                     $method,
                     $e->getMessage()
                 )
@@ -66,6 +67,20 @@ class UrlHelper
      * @return string
      */
     public function getAbsoluteUrl(string $path = ''): string
+    {
+        $path = $this->request->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
+
+        return $this->delegate->getAbsoluteUrl($path);
+    }
+
+    /**
+     * Récupération de l'url relative vers un chemin.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getRelativePath(string $path): string
     {
         $path = $this->request->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
 

@@ -47,7 +47,7 @@ interface RequestInterface
     public static function getFromGlobals(): RequestInterface;
 
     /**
-     * Récupération du chemin absolu vers la racine du site.
+     * Récupération du chemin absolu vers le répertoire racine de l'application.
      *
      * @return string
      */
@@ -66,4 +66,13 @@ interface RequestInterface
      * @return ResponseInterface|null
      */
     public function psr(): ?PsrRequest;
+
+    /**
+     * Définition du chemin absolu vers le répertoire racine de l'application.
+     *
+     * @param string
+     *
+     * @return static
+     */
+    public function setDocumentRoot(string $documentRoot): RequestInterface;
 }
