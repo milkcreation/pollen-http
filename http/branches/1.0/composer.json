@@ -8,7 +8,7 @@
     "http",
     "PSR-7"
   ],
-  "time": "2021-02-21",
+  "time": "2021-02-24",
   "license": "MIT",
   "authors": [
     {
@@ -49,7 +49,9 @@
     }
   },
   "suggest": {
-    "pollen-solutions/container" : "Pollen Container Component - PSR-11 ready Dependencies Injection Container"
+    "pollen-solutions/container" : "Pollen Container Component - PSR-11 ready Dependencies Injection Container.",
+    "pollen-solutions/cookie": "Pollen Cookie Component - Cookies repository.",
+    "pollen-solutions/session": "Pollen Session Component - HTTP Request User's session store and query information."
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
