@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Pollen\Http;
 
 use BadMethodCallException;
+use Exception;
 use Symfony\Component\HttpFoundation\UrlHelper as BaseUrlHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Pollen\Support\Proxy\HttpRequestProxy;
 use Throwable;
 
 /**
@@ -14,24 +16,25 @@ use Throwable;
  */
 class UrlHelper
 {
+    use HttpRequestProxy;
+
     /**
      * @var BaseUrlHelper
      */
     protected $delegate;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
      * @param RequestInterface|null $request
      */
     public function __construct(?RequestInterface $request = null)
     {
-        $this->request = $request ?? Request::getFromGlobals();
+        if ($request !== null) {
+            $this->setHttpRequest($request);
+        }
+
         $requestStack =  new RequestStack();
-        $requestStack->push($this->request);
+        $requestStack->push($this->httpRequest());
+
         $this->delegate = new BaseUrlHelper($requestStack);
     }
 
@@ -42,11 +45,15 @@ class UrlHelper
      * @param array $arguments
      *
      * @return mixed
+     *
+     * @throws Exception
      */
     public function __call(string $method, array $arguments)
     {
         try {
             return $this->delegate->{$method}(...$arguments);
+        } catch (Exception $e) {
+            throw $e;
         } catch (Throwable $e) {
             throw new BadMethodCallException(
                 sprintf(
@@ -54,36 +61,58 @@ class UrlHelper
                     BaseUrlHelper::class,
                     $method,
                     $e->getMessage()
-                )
+                ), 0, $e
             );
         }
     }
 
     /**
-     * Récupération de l'url absolue vers un chemin.
+     * Récupération de l'url absolue vers un chemin relatif ou absolu.
      *
-     * @param string $path
+     * @param string $path Chemin relatif ou absolu appartenant dossier racine de la requête.
      *
      * @return string
      */
     public function getAbsoluteUrl(string $path = ''): string
     {
-        $path = $this->request->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
+        $docRoot = $this->httpRequest()->getDocumentRoot();
+
+        if (preg_match('/^' . preg_quote($docRoot, '/') . '(.*)/', $path, $matches)) {
+            $path = $matches[1];
+        }
+
+        $path = $this->httpRequest()->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
 
         return $this->delegate->getAbsoluteUrl($path);
     }
 
     /**
-     * Récupération de l'url relative vers un chemin.
+     * Récupération de l'url relative vers un chemin relatif ou absolu.
      *
-     * @param string $path
+     * @param string $path Chemin relatif ou absolu appartenant dossier racine de la requête.
      *
      * @return string
      */
     public function getRelativePath(string $path): string
     {
-        $path = $this->request->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
+        $docRoot = $this->httpRequest()->getDocumentRoot();
 
-        return $this->delegate->getAbsoluteUrl($path);
+        if (preg_match('/^' . preg_quote($docRoot, '/') . '(.*)/', $path, $matches)) {
+            $path = $matches[1];
+        }
+
+        $path = $this->httpRequest()->getRewriteBase() . sprintf('/%s', ltrim($path, '/'));
+
+        return sprintf('/%s', ltrim($this->delegate->getRelativePath($path), '/'));
+    }
+
+    /**
+     * Récupération de la portée de navigation.
+     *
+     * @return string
+     */
+    public function getScope(): string
+    {
+        return ($path = $this->httpRequest()->getRewriteBase()) ? sprintf('/%s/', rtrim(ltrim($path, '/'), '/')) : '/';
     }
 }
