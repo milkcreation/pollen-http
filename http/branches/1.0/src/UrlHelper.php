@@ -6,6 +6,7 @@ namespace Pollen\Http;
 
 use BadMethodCallException;
 use Exception;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\UrlHelper as BaseUrlHelper;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Pollen\Support\Proxy\HttpRequestProxy;
@@ -64,6 +65,18 @@ class UrlHelper
                 ), 0, $e
             );
         }
+    }
+
+    /**
+     * Récupération de l'instance de l'url absolue vers un chemin relatif ou absolu.
+     *
+     * @param string $path
+     *
+     * @return UriInterface
+     */
+    public function getAbsoluteUri(string $path = ''): UriInterface
+    {
+        return (new UrlManipulator($this->getAbsoluteUrl($path)))->get();
     }
 
     /**
