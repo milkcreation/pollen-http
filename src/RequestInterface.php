@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
+use Pollen\Support\ParamsBagInterface;
 use Psr\Http\Message\ServerRequestInterface as PsrRequest;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 
@@ -54,11 +55,38 @@ interface RequestInterface
     public function getDocumentRoot(): ?string;
 
     /**
-     * Récupération du prefixe d'url
+     * Récupération du préfixe d'url.
      *
      * @return static
      */
     public function getRewriteBase(): string;
+
+    /**
+     * Récupération de variables passées en arguments ou dans le contenu de la requête (ex. JSON|$_REQUEST).
+     *
+     * @param string|null $key
+     * @param mixed $default
+     *
+     * @return ParamsBagInterface|array|int|bool|string|null
+     */
+    public function input($key = null, $default = null);
+
+    /**
+     * Vérifie si la requête retourne un contenu de type JSON.
+     *
+     * @return bool
+     */
+    public function isJson(): bool;
+
+    /**
+     * Récupération de variables JSON passées à la requête.
+     *
+     * @param string|null $key
+     * @param mixed $default
+     *
+     * @return ParamsBagInterface|array|int|bool|string|null
+     */
+    public function json($key = null, $default = null);
 
     /**
      * Conversion au format PSR-7.

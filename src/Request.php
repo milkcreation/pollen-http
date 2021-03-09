@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
+
 use Pollen\Support\Env;
 use Pollen\Support\Filesystem;
+use Pollen\Support\ParamsBag;
+use Pollen\Support\ParamsBagInterface;
+use Pollen\Support\Str;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ServerRequestInterface as PsrRequest;
 use Symfony\Component\HttpFoundation\Request as BaseRequest;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Throwable;
 
 class Request extends BaseRequest implements RequestInterface
 {
@@ -25,6 +30,12 @@ class Request extends BaseRequest implements RequestInterface
      * @var string
      */
     protected $documentRoot;
+
+    /**
+     * Variables décodées issues du contenu d'une requête de type JSON.
+     * @var ParamsBagInterface|null
+     */
+    protected $json;
 
     /**
      * @inheritDoc
@@ -113,6 +124,58 @@ class Request extends BaseRequest implements RequestInterface
             return '';
         }
         return $this->server->get('CONTEXT_PREFIX', '');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function input($key = null, $default = null)
+    {
+        if ($this->isJson()) {
+            $data = $this->json();
+        } elseif (!in_array($this->getRealMethod(), ['GET', 'HEAD'])) {
+            $data =  $this->request->all();
+        } else {
+            $data = [];
+        }
+
+        $inputBag = new ParamsBag(array_merge($data, $this->query->all()));
+
+        if ($key === null) {
+            return $inputBag;
+        }
+
+        return $inputBag->get($key, $default);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isJson(): bool
+    {
+        return Str::contains($this->headers->get('CONTENT_TYPE') ?? '', ['/json', '+json']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function json($key = null, $default = null)
+    {
+        if ($this->json === null) {
+            try {
+                $data = json_decode($this->getContent(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (Throwable $e) {
+                $data = [];
+            }
+
+            $this->json = new ParamsBag($data);
+        }
+
+        if ($key === null) {
+            return $this->json;
+        }
+
+        return data_get($this->json->all(), $key, $default);
     }
 
     /**
