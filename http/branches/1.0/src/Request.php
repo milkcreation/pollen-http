@@ -132,9 +132,9 @@ class Request extends BaseRequest implements RequestInterface
     public function input($key = null, $default = null)
     {
         if ($this->isJson()) {
-            $data = $this->json();
+            $data = $this->json()->all();
         } elseif (!in_array($this->getRealMethod(), ['GET', 'HEAD'])) {
-            $data =  $this->request->all();
+            $data = $this->request->all();
         } else {
             $data = [];
         }
@@ -175,7 +175,7 @@ class Request extends BaseRequest implements RequestInterface
             return $this->json;
         }
 
-        return data_get($this->json->all(), $key, $default);
+        return $this->json->get($key, $default);
     }
 
     /**
