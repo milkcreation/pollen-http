@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Http;
 
 use Pollen\Container\BaseServiceProvider;
-use Psr\Http\Message\RequestInterface as PsrRequestInterface;
+use Psr\Http\Message\ServerRequestInterface as PsrRequestInterface;
 
 class HttpServiceProvider extends BaseServiceProvider
 {
