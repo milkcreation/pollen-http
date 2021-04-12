@@ -42,12 +42,14 @@ class Request extends BaseRequest implements RequestInterface
      */
     public static function createFromBase(BaseRequest $request): RequestInterface
     {
+        $files = $request->files->all();
+
         $newRequest = (new static())->duplicate(
             $request->query->all(),
             $request->request->all(),
             $request->attributes->all(),
             $request->cookies->all(),
-            $request->files->all(),
+            is_array($files) ? array_filter($files) : $files,
             $request->server->all()
         );
 
