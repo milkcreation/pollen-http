@@ -121,7 +121,7 @@ class Request extends BaseRequest implements RequestInterface
     {
         if ($appUrl = Env::get('APP_URL')) {
             if (preg_match('/^' . preg_quote($this->getSchemeAndHttpHost(), '/') . '(.*)/', $appUrl, $matches)) {
-                return isset($matches[1]) ? '/' . rtrim(ltrim($matches[1], '/'), '/') : '';
+                return !empty($matches[1]) ? '/' . rtrim(ltrim($matches[1], '/'), '/') : '';
             }
             return '';
         }
