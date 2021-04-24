@@ -67,7 +67,7 @@ interface RequestInterface
      * @param string|null $key
      * @param mixed $default
      *
-     * @return ParamsBagInterface|array|int|bool|string
+     * @return ParamsBagInterface|mixed
      */
     public function input($key = null, $default = null);
 
@@ -84,7 +84,7 @@ interface RequestInterface
      * @param string|null $key
      * @param mixed $default
      *
-     * @return ParamsBagInterface|array|int|bool|string|null
+     * @return ParamsBagInterface|mixed
      */
     public function json($key = null, $default = null);
 

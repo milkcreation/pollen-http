@@ -32,10 +32,16 @@ class Request extends BaseRequest implements RequestInterface
     protected $documentRoot;
 
     /**
-     * Variables décodées issues du contenu d'une requête de type JSON.
+     * Liste des variables décodées issues du contenu d'une requête de type JSON.
      * @var ParamsBagInterface|null
      */
-    protected $json;
+    protected $jsonBag;
+
+    /**
+     * Liste des variables de requête.
+     * @var ParamsBagInterface|null
+     */
+    protected $inputBag;
 
     /**
      * @inheritDoc
@@ -133,21 +139,23 @@ class Request extends BaseRequest implements RequestInterface
      */
     public function input($key = null, $default = null)
     {
-        if ($this->isJson()) {
-            $data = $this->json()->all();
-        } elseif (!in_array($this->getRealMethod(), ['GET', 'HEAD'])) {
-            $data = $this->request->all();
-        } else {
-            $data = [];
-        }
+        if ($this->inputBag === null) {
+            if ($this->isJson()) {
+                $data = $this->json()->all();
+            } elseif (!in_array($this->getRealMethod(), ['GET', 'HEAD'])) {
+                $data = $this->request->all();
+            } else {
+                $data = $this->query->all();
+            }
 
-        $inputBag = new ParamsBag(array_merge($data, $this->query->all()));
+            $this->inputBag = new ParamsBag(array_merge($data, $this->query->all()));
+        }
 
         if ($key === null) {
-            return $inputBag;
+            return $this->inputBag;
         }
 
-        return $inputBag->get($key, $default);
+        return $this->inputBag->get($key, $default);
     }
 
     /**
@@ -163,21 +171,21 @@ class Request extends BaseRequest implements RequestInterface
      */
     public function json($key = null, $default = null)
     {
-        if ($this->json === null) {
+        if ($this->jsonBag === null) {
             try {
                 $data = json_decode($this->getContent(), true, 512, JSON_THROW_ON_ERROR);
             } catch (Throwable $e) {
                 $data = [];
             }
 
-            $this->json = new ParamsBag($data);
+            $this->jsonBag = new ParamsBag($data);
         }
 
         if ($key === null) {
-            return $this->json;
+            return $this->jsonBag;
         }
 
-        return $this->json->get($key, $default);
+        return $this->jsonBag->get($key, $default);
     }
 
     /**
