@@ -62,6 +62,13 @@ interface RequestInterface
     public function getRewriteBase(): string;
 
     /**
+     * Récupération des informations de navigateur.
+     *
+     * @return string|null
+     */
+    public function getUserAgent(): ?string;
+
+    /**
      * Récupération de variables passées en arguments ou dans le contenu de la requête (ex. JSON|$_REQUEST).
      *
      * @param string|null $key
