@@ -137,11 +137,19 @@ class Request extends BaseRequest implements RequestInterface
     /**
      * @inheritDoc
      */
+    public function getUserAgent(): ?string
+    {
+        return $this->headers->get('User-Agent');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function input($key = null, $default = null)
     {
         if ($this->inputBag === null) {
             if ($this->isJson()) {
-                $data = $this->json()->all();
+                $data = $this->json() instanceof ParamsBag ? $this->json()->all() : [];
             } elseif (!in_array($this->getRealMethod(), ['GET', 'HEAD'])) {
                 $data = $this->request->all();
             } else {
