@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Pollen\Http;
 
-use Pollen\Container\BaseServiceProvider;
+use Pollen\Container\BootableServiceProvider;
 use Psr\Http\Message\ServerRequestInterface as PsrRequestInterface;
 
-class HttpServiceProvider extends BaseServiceProvider
+class HttpServiceProvider extends BootableServiceProvider
 {
     /**
      * @inheritDoc
