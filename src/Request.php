@@ -20,28 +20,28 @@ use Throwable;
 class Request extends BaseRequest implements RequestInterface
 {
     /**
-     * Instance basée sur les variable globales de la requête courante.
+     * Request instance based on the request global variables.
      * @var RequestInterface|null
      */
-    protected static $globalsRequest;
+    protected static ?RequestInterface $globalsRequest = null;
 
     /**
-     * Chemin absolue vers le répertoire racine de l'application.
-     * @var string
+     * Absolute path to the request root directory.
+     * @var string|null
      */
-    protected $documentRoot;
+    protected ?string $documentRoot = null;
 
     /**
-     * Liste des variables décodées issues du contenu d'une requête de type JSON.
+     * List of decoded variables from a JSON request.
      * @var ParamsBagInterface|null
      */
-    protected $jsonBag;
+    protected ?ParamsBagInterface $jsonBag = null;
 
     /**
-     * Liste des variables de requête.
+     * List of complete variables from the request.
      * @var ParamsBagInterface|null
      */
-    protected $inputBag;
+    protected ?ParamsBagInterface $inputBag = null;
 
     /**
      * @inheritDoc
@@ -79,14 +79,10 @@ class Request extends BaseRequest implements RequestInterface
      */
     public static function createPsr(?BaseRequest $request = null): ?PsrRequest
     {
-        if ($request === null) {
-            $request = self::getFromGlobals();
-        }
-
         $psr17Factory = new Psr17Factory();
         $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
 
-        return $psrHttpFactory->createRequest($request);
+        return $psrHttpFactory->createRequest($request ?? self::getFromGlobals());
     }
 
     /**

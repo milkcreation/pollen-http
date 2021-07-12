@@ -10,65 +10,65 @@ use League\Uri\Contracts\UriInterface as LeagueUri;
 interface UrlManipulatorInterface
 {
     /**
-     * Résolution de sortie sous forme de chaîne de caractère.
+     * Resolve class as a string and returns url render.
      *
      * @return string
      */
     public function __toString(): string;
 
     /**
-     * Ajout d'une portion de chemin à la fin de l'url.
+     * Append an new segment to the URI path.
      *
-     * @param string $segment Portion de chemin à ajouter.
+     * @param string $segment
      *
      * @return static
      */
     public function appendSegment(string $segment): UrlManipulatorInterface;
 
     /**
-     * Suppression d'une portion de chemin de l'url.
+     * Remove path segment from the URI path.
      *
-     * @param string $segment Portion de chemin à supprimer.
+     * @param string $segment
      *
      * @return static
      */
     public function deleteSegment(string $segment): UrlManipulatorInterface;
 
     /**
-     * Récupération de la chaîne encodée de l'url.
+     * Get uri interface.
      *
      * @return UriInterface
      */
     public function get(): UriInterface;
 
     /**
-     * Retourne la chaîne décodée de l'url.
+     * Get decoded url.
      *
-     * @param boolean $raw Activation de la sortie brute.
+     * @param bool $raw
      *
      * @return string
      */
     public function decoded(bool $raw = true): string;
 
     /**
-     * Récupération de paramètres de l'url.
+     * Get url parameters value, returns list of parameters if key is null.
      *
-     * @param string|null $key Clé d'indice du paramètre. Tous si null.
-     * @param string|null $default Valeur de retour par défaut de récupération d'un paramètre unique.
+     * @param string|null $key
+     * @param string|null $default
      *
      * @return array|string|null
      */
     public function params(?string $key = null, ?string $default = null);
 
     /**
-     * Récupération du chemin relatif
+     * Get url relative path.
      *
      * @return string|null
      */
     public function path(): ?string;
 
     /**
-     * Définition de l'url.
+     * Set uri instance from Uri instance or url string.
      *
      * @param string|UriInterface|LeagueUri $uri
      *
@@ -77,16 +77,16 @@ interface UrlManipulatorInterface
     public function set($uri): UrlManipulatorInterface;
 
     /**
-     * Ajout d'arguments à l'url.
+     * Add parameters to the url.
      *
-     * @param array $args Liste des arguments de requête à inclure.
+     * @param array $args
      *
      * @return static
      */
     public function with(array $args): UrlManipulatorInterface;
 
     /**
-     * Ajout|Remplacement|Suppression du fragment (ancre).
+     * Add|Replace|remove url fragment.
      *
      * @param string $fragment
      *
@@ -95,16 +95,16 @@ interface UrlManipulatorInterface
     public function withFragment(string $fragment): UrlManipulatorInterface;
 
     /**
-     * Suppression d'arguments de l'url.
+     * Remove parameters from the url.
      *
-     * @param string[] $args Liste des arguments de requête à exclure.
+     * @param string[] $args
      *
      * @return static
      */
     public function without(array $args): UrlManipulatorInterface;
 
     /**
-     * Récupération du rendu de l'url
+     * Get url string render
      *
      * @return string
      */

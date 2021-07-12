@@ -14,10 +14,10 @@ use Psr\Http\Message\UriInterface;
 class UrlManipulator implements UrlManipulatorInterface
 {
     /**
-     * Instance de l'url.
+     * Uri instance.
      * @var UriInterface
      */
-    protected $uri;
+    protected UriInterface $uri;
 
     /**
      * @param UriInterface|LeagueUriInterface|string $uri
