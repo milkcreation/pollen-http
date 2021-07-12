@@ -20,9 +20,10 @@ class UrlHelper
     use HttpRequestProxy;
 
     /**
+     * Delegate UrlHelper.
      * @var BaseUrlHelper
      */
-    protected $delegate;
+    protected BaseUrlHelper $delegate;
 
     /**
      * @param RequestInterface|null $request
@@ -40,7 +41,7 @@ class UrlHelper
     }
 
     /**
-     * Délégation d'appel des méthodes de l'UrlHelper de Symfony.
+     * Delegate method call from Symfony UrlHelper.
      *
      * @param string $method
      * @param array $arguments
@@ -68,9 +69,9 @@ class UrlHelper
     }
 
     /**
-     * Récupération de l'instance de l'url absolue vers un chemin relatif ou absolu.
+     * Get uri instance from a path.
      *
-     * @param string $path
+     * @param string $path Relative path or absolute path belongs to the request document.
      *
      * @return UriInterface
      */
@@ -80,9 +81,9 @@ class UrlHelper
     }
 
     /**
-     * Récupération de l'url absolue vers un chemin relatif ou absolu.
+     * Get absolute url from a path.
      *
-     * @param string $path Chemin relatif ou absolu appartenant dossier racine de la requête.
+     * @param string $path Relative path or absolute path belongs to the request document.
      *
      * @return string
      */
@@ -100,9 +101,9 @@ class UrlHelper
     }
 
     /**
-     * Récupération de l'url relative vers un chemin relatif ou absolu.
+     * Get relative url from a path.
      *
-     * @param string $path Chemin relatif ou absolu appartenant dossier racine de la requête.
+     * @param string $path Relative path or absolute path belongs to the request document.
      *
      * @return string
      */
@@ -120,7 +121,7 @@ class UrlHelper
     }
 
     /**
-     * Récupération de la portée de navigation.
+     * Get url scope.
      *
      * @return string
      */

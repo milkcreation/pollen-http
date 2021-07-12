@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request as BaseRequest;
 interface RequestInterface
 {
     /**
-     * Creation d'une instance depuis une instance de requête symfony.
+     * Create a new instance from a Symfony request instance.
      *
      * @param BaseRequest $request
      *
@@ -23,7 +23,7 @@ interface RequestInterface
     public static function createFromBase(BaseRequest $request): RequestInterface;
 
     /**
-     * Création d'une instance depuis une requête PSR-7.
+     * Create a new instance from PSR-7 request instance.
      *
      * @param PsrRequest $psrRequest
      *
@@ -32,7 +32,7 @@ interface RequestInterface
     public static function createFromPsr(PsrRequest $psrRequest): RequestInterface;
 
     /**
-     * Convertion d'une instance de requête en requête HTTP Psr-7
+     * Converts from a request instance to a Psr-7 HTTP request.
      *
      * @param BaseRequest|null $request
      *
@@ -41,37 +41,37 @@ interface RequestInterface
     public static function createPsr(?BaseRequest $request = null): ?PsrRequest;
 
     /**
-     * Récupération de l'instance basée sur les variables globales.
+     * Retrieve the request based on request global variables.
      *
      * @return static
      */
     public static function getFromGlobals(): RequestInterface;
 
     /**
-     * Récupération du chemin absolu vers le répertoire racine de l'application.
+     * Get the absolute path to request root directory.
      *
-     * @return string
+     * @return string|null
      */
     public function getDocumentRoot(): ?string;
 
     /**
-     * Récupération du préfixe d'url.
+     * Get the request url prefix.
      *
      * @return static
      */
     public function getRewriteBase(): string;
 
     /**
-     * Récupération des informations de navigateur.
+     * Get the client user agent.
      *
      * @return string|null
      */
     public function getUserAgent(): ?string;
 
     /**
-     * Récupération de variables passées en arguments ou dans le contenu de la requête (ex. JSON|$_REQUEST).
+     * Returns instance of InputBag|Get a request variable value.
      *
-     * @param string|null $key
+     * @param string|int|null $key
      * @param mixed $default
      *
      * @return ParamsBagInterface|mixed
@@ -79,16 +79,16 @@ interface RequestInterface
     public function input($key = null, $default = null);
 
     /**
-     * Vérifie si la requête retourne un contenu de type JSON.
+     * Check if request is JSON type.
      *
      * @return bool
      */
     public function isJson(): bool;
 
     /**
-     * Récupération de variables JSON passées à la requête.
+     * Returns instance of JsonBag|Get a request variable value from JSON request.
      *
-     * @param string|null $key
+     * @param string|int|null $key
      * @param mixed $default
      *
      * @return ParamsBagInterface|mixed
@@ -96,14 +96,14 @@ interface RequestInterface
     public function json($key = null, $default = null);
 
     /**
-     * Conversion au format PSR-7.
+     * Get the request instance in PSR-7 format.
      *
      * @return ResponseInterface|null
      */
     public function psr(): ?PsrRequest;
 
     /**
-     * Définition du chemin absolu vers le répertoire racine de l'application.
+     * Set the absolute path to request root directory.
      *
      * @param string
      *

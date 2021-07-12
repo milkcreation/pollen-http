@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response as BaseResponse;
 trait ResponseTrait
 {
     /**
-     * Creation d'une instance depuis une instance de réponse symfony.
+     * Create a new instance from a Symfony response instance.
      *
      * @param BaseResponse|ResponseInterface $response
      *
@@ -25,7 +25,7 @@ trait ResponseTrait
     }
 
     /**
-     * Création d'une instance depuis une réponse PSR-7.
+     * Create a new instance from PSR-7 response instance.
      *
      * @param PsrResponse $psrResponse
      * @param boolean $streamed
@@ -38,7 +38,7 @@ trait ResponseTrait
     }
 
     /**
-     * Convertion d'une instance de réponse en réponse HTTP PSR-7.
+     * Converts from a response instance to a Psr-7 HTTP response.
      *
      * @param BaseResponse|ResponseInterface|null $response
      *
@@ -57,7 +57,7 @@ trait ResponseTrait
     }
 
     /**
-     * Conversion au format PSR-7.
+     * Get the response instance in PSR-7 format.
      *
      * @return PsrResponse
      */
