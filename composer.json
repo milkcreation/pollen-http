@@ -1,14 +1,14 @@
 {
   "name": "pollen-solutions/http",
   "description": "Pollen Http Component - HTTP specification layer.",
-  "homepage": "https://www.presstify.com/pollen-solutions/http/",
+  "homepage": "https://github.com/milkcreation/pollen-http.git",
   "keywords": [
     "pollen-solutions",
     "component",
     "http",
     "PSR-7"
   ],
-  "time": "2021-07-09",
+  "time": "2021-09-15",
   "license": "MIT",
   "authors": [
     {
